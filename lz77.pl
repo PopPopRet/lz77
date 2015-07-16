@@ -42,7 +42,7 @@ sub compress {
 			$ptr++;
 			$wlen = min($wlen+$length+1, $WINDOW_SIZE);
 			$plen = min($len - $ptr, $PREVIEW_SIZE);
-			print $output "$start, $length, $next\n";
+			print $output "$start,$length,$next\n";
 		}
 	}
 	close $input;
@@ -74,15 +74,13 @@ sub decompress {
 }
 
 my ($command, $source, $target) = @ARGV;
-if (not defined $source) {
-	die "no input file!\n";	
-}
-if (not defined $target) {
-	$target = "$source~"
-}
 if ($command eq 'c' or $command eq '-c') {
+	die "no input file!\n" unless defined $source;	
+	$target = "$source~" unless defined $target;
 	compress($source, $target);
 } elsif ($command eq 'x' or $command eq '-x') {
+	die "no input file!\n" unless defined $source;	
+	$target = "$source~" unless defined $target;
 	decompress($source, $target);
 } elsif ($command eq 't' or $command eq '-t') {
 	my $temp = "$target~";
